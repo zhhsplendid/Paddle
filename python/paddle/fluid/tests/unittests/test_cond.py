@@ -465,13 +465,13 @@ class TestCondBackward(unittest.TestCase):
                                lambda: simple_fc_net_with_inputs(img, label, class_num=10),
                                lambda: batchnorm_fc_with_inputs(img, label, class_num=10))
 
-        for use_parallel_exe in [False, True]:
-            self.backward_value_helper(cond_func,
+        
+        self.backward_value_helper(cond_func,
                                        core.is_compiled_with_cuda(),
-                                       use_parallel_exe)
-            self.add_optimizer_helper(cond_func,
+                                       use_parallel_exe=False)
+        self.add_optimizer_helper(cond_func,
                                       core.is_compiled_with_cuda(),
-                                      use_parallel_exe)
+                                      use_parallel_exe=False)
 
     def test_half_nested_cond_backward(self):
         def branch(i, img, label):
@@ -486,23 +486,22 @@ class TestCondBackward(unittest.TestCase):
             return layers.cond(i < 5, lambda: layers.mean(img),
                                lambda: branch(i, img, label))
 
-        for use_parallel_exe in [False, True]:
-            self.backward_value_helper(cond_func_simple_net_at_true,
+        
+        self.backward_value_helper(cond_func_simple_net_at_true,
                                        core.is_compiled_with_cuda(),
-                                       use_parallel_exe)
-            self.add_optimizer_helper(cond_func_simple_net_at_true,
+                                       use_parallel_exe=False)
+        self.add_optimizer_helper(cond_func_simple_net_at_true,
                                       core.is_compiled_with_cuda(),
-                                      use_parallel_exe)
-            self.backward_value_helper(cond_func_simple_net_at_false,
+                                      use_parallel_exe=False)
+        self.backward_value_helper(cond_func_simple_net_at_false,
                                        core.is_compiled_with_cuda(),
-                                       use_parallel_exe)
-            self.add_optimizer_helper(cond_func_simple_net_at_false,
+                                       use_parallel_exe=False)
+        self.add_optimizer_helper(cond_func_simple_net_at_false,
                                       core.is_compiled_with_cuda(),
-                                      use_parallel_exe)
+                                      use_parallel_exe=False)
 
     def test_nested_cond_backward(self):
         def branch(i, img, label, mod_two):
-
             if mod_two:
                 predicate = ((i % 2) == 0)
             else:
@@ -514,13 +513,12 @@ class TestCondBackward(unittest.TestCase):
             return layers.cond(i < 5, lambda: branch(i, img, label, True),
                                lambda: branch(i, img, label, False))
 
-        for use_parallel_exe in [False, True]:
-            self.backward_value_helper(cond_func,
+        self.backward_value_helper(cond_func,
                                        core.is_compiled_with_cuda(),
-                                       use_parallel_exe)
-            self.add_optimizer_helper(cond_func,
+                                       use_parallel_exe=False)
+        self.add_optimizer_helper(cond_func,
                                       core.is_compiled_with_cuda(),
-                                      use_parallel_exe)
+                                      use_parallel_exe=False)
 
 
 if __name__ == '__main__':
