@@ -21,17 +21,17 @@ namespace piano {
 namespace backends {
 
 std::function<llvm::Value*(llvm::Value*, llvm::IRBuilder<>*)>
-NvptxPrimitiveIrEmitter::GetUnaryOp(const note::Instruction* instr) {
-  return [instr](llvm::Value* Value,
-                 llvm::IRBuilder<>* ir_builder) -> llvm::Value* {
+NvptxPrimitiveIrEmitter::GetUnaryOp(const note::Instruction& instr) {
+  return [&instr](llvm::Value* Value,
+                  llvm::IRBuilder<>* ir_builder) -> llvm::Value* {
     return nullptr;
   };
 }
 
 std::function<llvm::Value*(llvm::Value*, llvm::Value*, llvm::IRBuilder<>*)>
-NvptxPrimitiveIrEmitter::GetBinaryOp(const note::Instruction* instr) {
-  return [instr](llvm::Value* first, llvm::Value* dst,
-                 llvm::IRBuilder<>* ir_builder) -> llvm::Value* {
+NvptxPrimitiveIrEmitter::GetBinaryOp(const note::Instruction& instr) {
+  return [&instr](llvm::Value* first, llvm::Value* dst,
+                  llvm::IRBuilder<>* ir_builder) -> llvm::Value* {
     return nullptr;
   };
 }
