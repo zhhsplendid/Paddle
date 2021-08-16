@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+#set -ex
 
 if [ -z ${BRANCH} ]; then
     BRANCH="paddle_compiler"
@@ -56,24 +56,72 @@ function parallel_test() {
     cp ${PADDLE_ROOT}/build/python/paddle/fluid/tests/unittests/op_test.py ${PADDLE_ROOT}/build/python
     ut_total_startTime_s=`date +%s`
 
-    # TODO
     EXIT_CODE=0
 
+    all_ctests=$(ctest -N | awk -F ': ' '{print $2}' | sed '/^$/d' | sed '$d')
+    compiler_files_contains_test=$(find ${PADDLE_ROOT}/paddle/fluid/compiler -iname "*test*" -type f)
+
+    # Temporary directory to save failed Piano test
+    tmp_dir=`mktemp -d`
+    echo "Created temporary directory to store test result:" $tmp_dir
+
+    piano_test_list=''
+    for test_case in $all_ctests; do
+	is_piano_test=0
+	for test_file in $compiler_files_contains_test; do
+	    if [[ $test_file =~ $test_case ]]; then
+                is_piano_test=1
+                break
+   	    fi
+	done
+
+        if [ $is_piano_test = 1 ]; then
+            tmp_file_rand=`date +%s%N`
+            tmp_file=$tmp_dir/$tmp_file_rand
+	    ctest -R $test_case --output-on-failure | tee $tmp_file
+	    piano_test_list="${piano_test_list}
+	    ${test_case}"
+	fi
+    done
+
+    failed_test_lists=''
+    for tmp_file in `ls $tmp_dir`; do
+        grep -q 'The following tests FAILED:' $tmp_dir/$tmp_file
+        grep_exit_code=$?
+        if [ $grep_exit_code -ne 0 ]; then
+            failed_test=''
+        else
+	    EXIT_CODE=8
+            failed_test=`grep -A 10000 'The following tests FAILED:' $tmp_dir/$tmp_file | sed 's/The following tests FAILED://g'|sed '/^$/d'`
+            failed_test_lists="${failed_test_lists}
+            ${failed_test}"
+        fi
+    done
+    rm -rf $tmp_dir
+    echo "Removed temporary directory which stores test result:" $tmp_dir
+
+    if [ $EXIT_CODE != 0 ]; then
+	echo "========================================="
+        echo "The following tests FAILED:"
+	echo "========================================="
+        echo "${failed_test_lists}"
+        exit 8;
+    fi
+
     ut_total_endTime_s=`date +%s`
+    echo "========================================="
+    echo "The following tests SUCCESSED:"
+    echo "========================================="
+    echo "${piano_test_list}"
+    echo ""
     echo "TestCases Total Time: $[ $ut_total_endTime_s - $ut_total_startTime_s ]s"
-    echo "ipipe_log_param_TestCases_Total_Time: $[ $ut_total_endTime_s - $ut_total_startTime_s ]s" >> ${PADDLE_ROOT}/build/build_summary.txt
+    echo "ipipe_log_param_TestCases_Total_Time: $[ $ut_total_endTime_s - $ut_total_startTime_s ]s"
 }
 
 function main() {
     init
     parallel_test
 
-    set +x
-    if [[ -f ${PADDLE_ROOT}/build/build_summary.txt ]];then
-        echo "=====================build summary======================"
-        cat ${PADDLE_ROOT}/build/build_summary.txt
-        echo "========================================================"
-    fi
     echo "piano_ci_test script finished as expected"
 }
 
