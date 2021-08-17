@@ -47,7 +47,7 @@ function init() {
 function parallel_test() {
     mkdir -p ${PADDLE_ROOT}/build
     cd ${PADDLE_ROOT}/build
-    pip3.7 install ${PADDLE_ROOT}/build/python/dist/*whl
+    pip install ${PADDLE_ROOT}/build/python/dist/*whl
     cp ${PADDLE_ROOT}/build/python/paddle/fluid/tests/unittests/op_test.py ${PADDLE_ROOT}/build/python
     ut_total_startTime_s=`date +%s`
 
