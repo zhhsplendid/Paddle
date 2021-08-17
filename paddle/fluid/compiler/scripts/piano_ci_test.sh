@@ -85,18 +85,21 @@ function parallel_test() {
     done
 
     failed_test_lists=''
-    for tmp_file in `ls $tmp_dir`; do
-        grep -q 'The following tests FAILED:' $tmp_dir/$tmp_file
+    set +e
+    for file in `ls $tmp_dir`; do
+        grep -q 'The following tests FAILED:' $tmp_dir/$file
         grep_exit_code=$?
         if [ $grep_exit_code -ne 0 ]; then
             failed_test=''
         else
 	    EXIT_CODE=8
-            failed_test=`grep -A 10000 'The following tests FAILED:' $tmp_dir/$tmp_file | sed 's/The following tests FAILED://g'|sed '/^$/d'`
+            failed_test=`grep -A 10000 'The following tests FAILED:' $tmp_dir/$file | sed 's/The following tests FAILED://g'|sed '/^$/d'`
             failed_test_lists="${failed_test_lists}
             ${failed_test}"
         fi
     done
+    set -e
+
     rm -rf $tmp_dir
     echo "Removed temporary directory which stores test result:" $tmp_dir
 
