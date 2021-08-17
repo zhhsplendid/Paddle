@@ -14,18 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -ex
+set -e
 
 if [ -z ${BRANCH} ]; then
     BRANCH="paddle_compiler"
 fi
 
 function init() {
-    RED='\033[0;31m'
-    BLUE='\033[0;34m'
-    BOLD='\033[1m'
-    NONE='\033[0m'
-
     PADDLE_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}")/../../../../" && pwd )"
     export PADDLE_ROOT
     if [ -z "${SCRIPT_NAME}" ]; then
