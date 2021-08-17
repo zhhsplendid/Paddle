@@ -35,7 +35,8 @@ class Shape {
   explicit Shape(const note::ShapeProto& proto);
 
   // Construct a shape with detail data member
-  Shape(note::ElementType element_type, const std::vector<int64_t>& dimensions,
+  Shape(note::ElementTypeProto element_type,
+        const std::vector<int64_t>& dimensions,
         std::vector<Shape> tuple_shapes = {})
       : element_type_(element_type),
         dimensions_(dimensions.begin(), dimensions.end()),
@@ -66,8 +67,8 @@ class Shape {
   // stores.
   //
   // Methods for accessing the element type.
-  note::ElementType element_type() const { return element_type_; }
-  void set_element_type(note::ElementType value) { element_type_ = value; }
+  note::ElementTypeProto element_type() const { return element_type_; }
+  void set_element_type(note::ElementTypeProto value) { element_type_ = value; }
 
   // Methods for accessing the dimensions array.
   std::vector<int64_t>* mutable_dimensions() { return &dimensions_; }
@@ -85,7 +86,7 @@ class Shape {
 
  private:
   // The element type of this shape (tuple, array, etc).
-  note::ElementType element_type_ = note::INVALID_ELEMENT_TYPE;
+  note::ElementTypeProto element_type_ = note::INVALID_ELEMENT_TYPE;
 
   // The array bounds of the dimensions.
   std::vector<int64_t> dimensions_;

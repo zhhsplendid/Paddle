@@ -36,7 +36,7 @@ TEST_F(LayoutTest, LayoutTransWithProto) {
 }
 
 TEST_F(LayoutTest, LayoutToString) {
-  ASSERT_EQ("{3,2,1,0}", layout_.ToString());
+  ASSERT_EQ("{3, 2, 1, 0}", layout_.ToString());
 }
 
 }  // namespace piano
