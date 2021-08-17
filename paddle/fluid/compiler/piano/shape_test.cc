@@ -70,7 +70,7 @@ TEST_F(ShapeTest, ShapeToString) {
   ASSERT_EQ("f32[]{}", scalar_string);
 
   auto&& array_string = array_.ToString();
-  ASSERT_EQ("f32[2,3]{}", array_string);
+  ASSERT_EQ("f32[2, 3]{}", array_string);
 }
 
 TEST_F(ShapeTest, SignatureTransWithProto) {
@@ -92,11 +92,11 @@ TEST_F(ShapeTest, SignatureTransWithProto) {
   ASSERT_EQ(2U, signature_from_proto.parameters().size());
   ASSERT_EQ(2U, signature_from_proto.parameter_names().size());
   ASSERT_EQ(2U, signature_from_proto.result().dimensions().size());
-  EXPECT_EQ("f32[2,6]{}", signature_from_proto.result().ToString());
+  EXPECT_EQ("f32[2, 6]{}", signature_from_proto.result().ToString());
 }
 
 TEST_F(ShapeTest, SignatureToString) {
-  ASSERT_EQ("(arg1: f32[2,3]{},arg2: f32[3,6]{}) -> f32[2,6]{}",
+  ASSERT_EQ("(arg1: f32[2, 3]{}, arg2: f32[3, 6]{}) -> f32[2, 6]{}",
             signature_.ToString());
 }
 
