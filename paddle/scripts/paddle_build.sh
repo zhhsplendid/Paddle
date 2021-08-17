@@ -243,6 +243,7 @@ EOF
         -DWITH_GPU=${WITH_GPU:-OFF} \
         -DWITH_TENSORRT=${WITH_TENSORRT:-ON} \
         -DWITH_ROCM=${WITH_ROCM:-OFF} \
+        -DWITH_COMPILER=${WITH_COMPILER:-OFF} \
         -DWITH_DISTRIBUTE=${distibuted_flag} \
         -DWITH_MKL=${WITH_MKL:-ON} \
         -DWITH_AVX=${WITH_AVX:-OFF} \
